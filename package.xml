@@ -19,17 +19,12 @@
   </maintainers>
   <license>LGPL</license>
   <release>
-    <version>0.2</version>
-    <date>2003-03-24</date>
+    <version>0.2.1</version>
+    <date>2003-??-??</date>
     <state>devel</state>
     <notes>
-Bugs fixed:
-
-- Remapping error codes from native to PEAR DB.
-
-Also:
-
-- Tests and examples added to the package.
+* mainly resolved CS issues
+* added sort parameter to simpleQuery()
 </notes>
     <filelist>
       <dir name="/" role="php" baseinstalldir="DB">
@@ -92,6 +87,23 @@ Also:
   </release>
   <changelog>
   <release>
+  
+    <version>0.2</version>
+    <date>2003-03-24</date>
+    <state>devel</state>
+    <notes>
+Bugs fixed:
+
+- Remapping error codes from native to PEAR DB.
+
+Also:
+
+- Tests and examples added to the package.
+    </notes>
+  
+  </release>
+  <release>
+  
     <version>0.1</version>
     <date>2003-03-06</date>
     <state>devel</state>
