@@ -21,7 +21,7 @@
   <release>
     <version>0.3</version>
     <date>2003-09-22</date>
-    <state>devel</state>
+    <state>beta</state>
     <notes>
 * mainly resolved CS issues
 * added sort parameter to simpleQuery()
