@@ -362,9 +362,7 @@ class DB_ldap2 extends DB_common
                 case 'mod_del':
                 case 'mod_replace':
                     $ldap_action = "ldap_$action";
-#print "DN: $dn<br />Entry:";
-#print_r($entry);
-                    $result = $ldap_action($this->connection, $dn, $entry);
+                    $result = @$ldap_action($this->connection, $dn, $entry);
                     break;
                 case 'compare':
                     $result = @ldap_compare($this->connection, $dn, $attribute, $value);
