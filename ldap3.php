@@ -68,23 +68,24 @@ class DB_ldap3 extends DB_ldap2
         $pw     = $dsninfo['password'];
         $host   = $dsninfo['hostspec'];
 
-	$this->param = array(
-	    action => 'search',
-    	    base_dn => $this->base_dn = $dsninfo['database'],
-    	    attributes => array(),
-    	    attrsonly => 0,
-    	    sizelimit => 0,
-    	    timelimit => 0,
-    	    deref => LDAP_DEREF_NEVER,
-	    attribute => '',
-	    value => '',
-	    newrdn => '',
-	    newparent => '',
-	    deleteoldrdn => false
-	);
-	$this->last_param = $this->param;
-	$this->setOption("seqname_format", "sn=%s," . $dsninfo['database']);
-	$this->fetchmode = DB_FETCHMODE_ASSOC;
+        $this->param = array(
+            'action' =>     'search',
+            'base_dn' =>    $this->base_dn = $dsninfo['database'],
+            'attributes' => array(),
+            'attrsonly' =>  0,
+            'sizelimit' =>  0,
+            'timelimit' =>  0,
+            'deref' =>      LDAP_DEREF_NEVER,
+            'attribute' =>  '',
+            'value' =>      '',
+            'newrdn' =>     '',
+            'newparent' =>  '',
+            'deleteoldrdn'=>false,
+            'sort' =>       '',
+        );
+        $this->last_param = $this->param;
+        $this->setOption("seqname_format", "sn=%s," . $dsninfo['database']);
+        $this->fetchmode = DB_FETCHMODE_ASSOC;
 
         if ($host) {
             $conn = @ldap_connect($host);
