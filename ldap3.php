@@ -67,6 +67,7 @@ class DB_ldap3 extends DB_ldap2
         $user   = $dsninfo['username'];
         $pw     = $dsninfo['password'];
         $host   = $dsninfo['hostspec'];
+        $port   = empty($dsninfo['port']) ? 389 : $dsninfo['port'];
 
         $this->param = array(
             'action' =>     'search',
@@ -88,7 +89,7 @@ class DB_ldap3 extends DB_ldap2
         $this->fetchmode = DB_FETCHMODE_ASSOC;
 
         if ($host) {
-            $conn = @ldap_connect($host);
+            $conn = @ldap_connect($host, $port);
         } else {
             return $this->raiseError("unknown host $host");
         }

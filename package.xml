@@ -19,12 +19,11 @@
   </maintainers>
   <license>LGPL</license>
   <release>
-    <version>0.3</version>
-    <date>2003-09-22</date>
+    <version>0.4</version>
+    <date>2003-09-30</date>
     <state>beta</state>
     <notes>
-* mainly resolved CS issues
-* added sort parameter to simpleQuery()
+* allow connect to other port than 389
 </notes>
     <filelist>
       <dir name="/" role="php" baseinstalldir="DB">
@@ -86,6 +85,15 @@
     </deps>
   </release>
   <changelog>
+  <release>
+    <version>0.3</version>
+    <date>2003-09-22</date>
+    <state>beta</state>
+    <notes>
+* mainly resolved CS issues
+* added sort parameter to simpleQuery()
+</notes>
+  </release>
   <release>
   
     <version>0.2</version>
