@@ -116,7 +116,7 @@ class DB_ldap2 extends DB_common
      *
      * @see DB_common::DB_common()
      */
-    function DB_ldap()
+    function DB_ldap2()
     {
         $this->DB_common();
         $this->phptype = 'ldap2';
