@@ -62,15 +62,15 @@ class DB_ldap2 extends DB_common
      */
     var	$param_search = array(
         'action', 'base_dn', 'attributes', 'attrsonly', 'sizelimit',
-        'timelimit', 'deref');
+        'timelimit', 'deref','sort');
 
     /**
      * list of parameters for modify actions
      * @access private
      */
     var	$param_modify = array(
-	'action', 'attribute', 'value', 'newrdn', 'newparent',
-	'deleteoldrdn');
+        'action', 'attribute', 'value', 'newrdn', 'newparent',
+        'deleteoldrdn');
 
     /**
      * default parameters for query
@@ -131,7 +131,7 @@ class DB_ldap2 extends DB_common
             0x10 => DB_ERROR_NOSUCHFIELD,               // LDAP_NO_SUCH_ATTRIBUTE
             0x11 => DB_ERROR_NOSUCHFIELD,               // LDAP_UNDEFINED_TYPE
             0x12 => DB_ERROR_CONSTRAINT,                // LDAP_INAPPROPRIATE_MATCHING
-            0x13 => DB_ERROR_CONSTRAINT,       		// LDAP_CONSTRAINT_VIOLATION
+            0x13 => DB_ERROR_CONSTRAINT,                // LDAP_CONSTRAINT_VIOLATION
             0x14 => DB_ERROR_ALREADY_EXISTS,            // LDAP_TYPE_OR_VALUE_EXISTS
             0x15 => DB_ERROR_INVALID,                   // LDAP_INVALID_SYNTAX
             0x20 => DB_ERROR_NOSUCHTABLE,               // LDAP_NO_SUCH_OBJECT
@@ -172,8 +172,9 @@ class DB_ldap2 extends DB_common
      */
     function connect($dsninfo, $persistent = false)
     {
-        if (!DB::assertExtension('ldap'))
+        if (!DB::assertExtension('ldap')) {
             return $this->raiseError(DB_ERROR_EXTENSION_NOT_FOUND);
+        }
 
         $this->dsn = $dsninfo;
         $type   = $dsninfo['phptype'];
@@ -181,23 +182,24 @@ class DB_ldap2 extends DB_common
         $pw     = $dsninfo['password'];
         $host   = $dsninfo['hostspec'];
 
-	$this->param = array(
-	    action => 'search',
-    	    base_dn => $this->base_dn = $dsninfo['database'],
-    	    attributes => array(),
-    	    attrsonly => 0,
-    	    sizelimit => 0,
-    	    timelimit => 0,
-    	    deref => LDAP_DEREF_NEVER,
-	    attribute => '',
-	    value => '',
-	    newrdn => '',
-	    newparent => '',
-	    deleteoldrdn => false
-	);
-	$this->last_param = $this->param;
-	$this->setOption("seqname_format", "sn=%s," . $dsninfo['database']);
-	$this->fetchmode = DB_FETCHMODE_ASSOC;
+        $this->param = array(
+            'action' =>     'search',
+            'base_dn' =>    $this->base_dn = $dsninfo['database'],
+            'attributes' => array(),
+            'attrsonly' =>  0,
+            'sizelimit' =>  0,
+            'timelimit' =>  0,
+            'deref' =>      LDAP_DEREF_NEVER,
+            'attribute' =>  '',
+            'value' =>      '',
+            'newrdn' =>     '',
+            'newparent' =>  '',
+            'deleteoldrdn'=>false,
+            'sort' =>       ''
+        );
+        $this->last_param = $this->param;
+        $this->setOption("seqname_format", "sn=%s," . $dsninfo['database']);
+        $this->fetchmode = DB_FETCHMODE_ASSOC;
 
         if ($host) {
             $conn = @ldap_connect($host);
@@ -246,112 +248,141 @@ class DB_ldap2 extends DB_common
      * (for reading operations) or data array (for writing operations).
      * Another elements of $query array are query parameters which overrides
      * the default parameters.
+     * 
+     * The following parameters can be passed for search queries:<br />
+     * <li />base_dn
+     * <li />attributes - array, the attributes that shall be returned
+     * <li />attrsonly
+     * <li />sizelimit - integer, the max number of results to be returned
+     * <li />timelimit - integer, the timelimit after which to stop searching
+     * <li />deref - 
+     * <li/>sort - string, which tells the attribute name by which to sort
+     *  
      *
      * I.e.:
+     * <code>
+     * // search queries 
+     * // 'base_dn' is not given, so the one passed to connect() will be used
+     * $db->simpleQuery("uid=dexter");
      *
-     *  $db->simpleQuery("uid=dexter");
+     * // base_dn is given
+     * // the 'attributes' key defines the attributes that shall be returned
+     * // 'sort' defines the sort order of the data
+     * $db->simpleQuery(array(
+     *      'uid=dexter',
+     *      'base_dn' => 'ou=People,dc=example,dc=net',
+     *      'attributes'=>array('dn','o','l'),
+     *      'sort'=>'o'
+     * ));
      *
-     *  $db->simpleQuery(array(
-     *      "uid=dexter",
-     *      "base_dn" => "ou=People,dc=example,dc=net"
-     *  ));
-     *
-     *  $db->simpleQuery(
+     * // use this kind of query for adding data
+     * $db->simpleQuery(
      *      array(
      *          array(
      *              'dn' => 'cn=Piotr Roszatycki,dc=example,dc=com',
      *              'objectClass' => array('top', 'person'),
      *              'cn' => 'Piotr Roszatycki',
      *              'sn' => 'Roszatycki'),
-     *         'action' => 'add'
-     *  ));
+     *          'action' => 'add'
+     * ));
      *
      * @param mixed $query the ldap query
      * @return int result from LDAP function for failure queries,
      * DB_OK for successful queries or DB Error object if wrong syntax
      */
-    function simpleQuery($query)
+    function simpleQuery( $query)
     {
-	if (is_array($query)) {
-	    $last_param = $query;
-	    $query = (isset($query[0]) ? $query[0] : 'objectClass=*');
-	    unset($last_param[0]);
-	} else {
-	    $last_param = array();
-	}
-	$action = (isset($last_param['action']) ? $last_param['action'] : $this->param['action']);
+        if (is_array($query)) {
+            $last_param = $query;
+            $query = (isset($query[0]) ? $query[0] : 'objectClass=*');
+            unset($last_param[0]);
+        } else {
+            $last_param = array();
+        }
+        $action = (isset($last_param['action']) ? $last_param['action'] : $this->param['action']);
+        // check if the given action is a valid modifier action, i.e. 'search'
         if (!$this->isManip($action)) {
-	    $this->last_param = $this->param;
-	    foreach($this->param_search as $k) {
-                if (isset($last_param[$k])) $this->last_param[$k] = $last_param[$k];
+            $this->last_param = $this->param;
+            foreach($this->param_search as $k) {
+                if (isset($last_param[$k])) {
+                    $this->last_param[$k] = $last_param[$k];
+                }
             }
-	    extract($this->last_param);
+            extract($this->last_param);
             // double escape char for filter: '(o=Przedsi\C4\99biorstwo)' => '(o=Przedsi\\C4\\99biorstwo)'
             $this->last_query = $query;
             $filter = str_replace('\\', '\\\\', $query);
-	    switch ($action) {
-		case 'search':
-        	case 'list':
+            switch ($action) {
+                // ldap_search, *list, *read have the same arguments
+                case 'search':
+                case 'list':
                 case 'read':
-		    $ldap_action = "ldap_$action";
-		    $result = @$ldap_action($this->connection, $base_dn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref);
-		    break;
-        	default:
-            	    return $this->ldapRaiseError(DB_ERROR_SYNTAX);
-	    }
+                    $ldap_action = "ldap_$action";
+                    $result = @$ldap_action($this->connection, $base_dn, $filter, $attributes, $attrsonly, $sizelimit, $timelimit, $deref);
+                    break;
+                default:
+                    return $this->ldapRaiseError(DB_ERROR_SYNTAX);
+            }
             if (!$result) {
                 return $this->ldapRaiseError();
             }
-	    $this->row[$result] = 0; // reset the row counter.
-	    $numrows = $this->numrows($result);
-	    if (is_object($numrows)) {
+            $this->row[$result] = 0; // reset the row counter.
+            $numrows = $this->numrows($result);
+            if (is_object($numrows)) {
                 return $numrows;
             }
             $this->num_rows[$result] = $numrows;
             $this->affected = 0;
-	    return $result;
+            if ($sort) {
+                ldap_sort($this->connection,$result,$sort);
+            }
+            return $result;
         } else {
             // If first argument is an array, it contains the entry with DN.
             if (is_array($query)) {
                 $entry = $query;
                 $dn = $entry['dn'];
-        	unset($entry['dn']);
+                unset($entry['dn']);
             } else {
                 $entry = array();
-		$dn = $query;
+                $dn = $query;
             }
-	    $this->last_param = $this->param;
-	    foreach($this->param_modify as $k) {
-                if (isset($last_param[$k])) $this->last_param[$k] = $last_param[$k];
+            $this->last_param = $this->param;
+            foreach($this->param_modify as $k) {
+                if (isset($last_param[$k])) {
+                    $this->last_param[$k] = $last_param[$k];
+                }
             }
-	    extract($this->last_param);
+            extract($this->last_param);
             $this->last_query = $query;
-	    switch ($action) {
-		case 'add':
-        	case 'modify':
+            switch ($action) {
+                case 'add':
+                case 'modify':
                 case 'mod_add':
                 case 'mod_del':
                 case 'mod_replace':
-		    $ldap_action = "ldap_$action";
-		    $result = @$ldap_action($this->connection, $dn, $entry);
-		    break;
-		case 'compare':
-		    $result = @ldap_compare($this->connection, $dn, $attribute, $value);
-		    break;
-		case 'delete':
-            	    $result = @ldap_delete($this->connection, $dn);
-		    break;
-            	case 'rename':
-            	    $result = @ldap_rename($this->connection, $dn, $newrdn, $newparent, $deleteoldrdn);
-		    break;
-        	default:
-            	    return $this->ldapRaiseError(DB_ERROR_SYNTAX);
-	    }
+                    $ldap_action = "ldap_$action";
+#print "DN: $dn<br />Entry:";
+#print_r($entry);
+                    $result = $ldap_action($this->connection, $dn, $entry);
+                    break;
+                case 'compare':
+                    $result = @ldap_compare($this->connection, $dn, $attribute, $value);
+                    break;
+                case 'delete':
+                    $result = @ldap_delete($this->connection, $dn);
+                    break;
+                case 'rename':
+                    $result = @ldap_rename($this->connection, $dn, $newrdn, $newparent, $deleteoldrdn);
+                    break;
+                default:
+                    return $this->ldapRaiseError(DB_ERROR_SYNTAX);
+            }
             if (!$result) {
                 return $this->ldapRaiseError();
             }
-	    $this->affected = 1;
-	    return DB_OK;
+            $this->affected = 1;
+            return DB_OK;
         }
     }
 
@@ -544,8 +575,8 @@ class DB_ldap2 extends DB_common
     */
     function quote($str = null)
     {
-	$str = str_replace(array('\\', '"'), array('\\\\', '\\"'), $str);
-	return $str;
+        $str = str_replace(array('\\', '"'), array('\\\\', '\\"'), $str);
+        return $str;
     }
 
     // }}}
@@ -813,7 +844,7 @@ class DB_ldap2 extends DB_common
      */
     function dropSequence($seq_name)
     {
-	$seq_dn = $this->getSequenceName($seq_name);
+        $seq_dn = $this->getSequenceName($seq_name);
 
         // Delete the sequence entry
         $data = array(
@@ -840,15 +871,16 @@ class DB_ldap2 extends DB_common
         }
         if ($this->last_param['action'] !== null) {
             return $this->raiseError($errno, null, null,
-                sprintf('%s base="%s" filter="%s"',
-                    $this->last_param['action'] ? $this->last_param['action'] : $this->param['action'], 
-		    $this->last_param['base_dn'] ? $this->last_param['base_dn'] : $this->param['base_dn'], 
-		    is_array($this->last_query) ? "" : $this->last_query
-                ),
-                $errno == @ldap_error($this->connection));
+                        sprintf('%s base="%s" filter="%s"',
+                            $this->last_param['action'] ? $this->last_param['action'] : $this->param['action'], 
+                            $this->last_param['base_dn'] ? $this->last_param['base_dn'] : $this->param['base_dn'], 
+                            is_array($this->last_query) ? "" : $this->last_query
+                        ),
+                        $errno == @ldap_error($this->connection)
+                    );
         } else {
             return $this->raiseError($errno, null, null, "???",
-                @ldap_error($this->connection));
+                        @ldap_error($this->connection));
         }
     }
 
@@ -1204,9 +1236,9 @@ class DB_ldap2 extends DB_common
      */
     function ldapExplodeDN($dn, $with_attrib = 0)
     {
-	$arr = ldap_explode_dn($dn, $with_attrib ? 1 : 0);
-	unset($arr['count']);
-	return $arr;
+        $arr = ldap_explode_dn($dn, $with_attrib ? 1 : 0);
+        unset($arr['count']);
+        return $arr;
     }
 
 }
