@@ -96,8 +96,8 @@ QA release:
    </pearinstaller>
    <package>
     <name>DB</name>
-    <min>1.7.0</min>
     <channel>pear.php.net</channel>
+    <min>1.7.0</min>
    </package>
    <extension>
     <name>ldap</name>
