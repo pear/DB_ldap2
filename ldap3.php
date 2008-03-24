@@ -59,7 +59,7 @@ class DB_ldap3 extends DB_ldap2
      */
     function connect($dsninfo, $persistent = false)
     {
-        if (!DB::assertExtension('ldap'))
+        if (!PEAR::loadExtension('ldap'))
             return $this->raiseError(DB_ERROR_EXTENSION_NOT_FOUND);
 
         $this->dsn = $dsninfo;

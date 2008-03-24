@@ -1,121 +1,177 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
-<package version="1.0">
-  <name>DB_ldap2</name>
-  <summary>DB drivers for LDAP v2 and v3 database</summary>
-  <description>
-        DB_ldap2 and DB_ldap3 classes extend DB_common to provide DB
-        compliant access to LDAP servers with protocol version 2 and 3. The
-        drivers provide common DB interface as much as possible and support
-        prepare/execute statements.
-  </description>
-  <maintainers>
-    <maintainer>
-      <user>dexter</user>
-      <name>Piotr Roszatycki</name>
-      <email>dexter@debian.org</email>
-      <role>lead</role>
-    </maintainer>
-  </maintainers>
-  <license>LGPL</license>
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.7.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd">
+ <name>DB_ldap2</name>
+ <channel>pear.php.net</channel>
+ <summary>DB drivers for LDAP v2 and v3 database</summary>
+ <description>DB_ldap2 and DB_ldap3 classes extend DB_common to provide DB
+compliant access to LDAP servers with protocol version 2 and 3. The
+drivers provide common DB interface as much as possible and support
+prepare/execute statements.
+ </description>
+ <lead>
+  <name>Piotr Roszatycki</name>
+  <user>dexter</user>
+  <email>dexter@debian.org</email>
+  <active>no</active>
+ </lead>
+ <date>2008-03-24</date>
+ <time>20:20:00</time>
+ <version>
+  <release>0.5.0</release>
+  <api>0.5.0</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license uri="http://www.gnu.org/copyleft/lesser.html">LGPL</license>
+ <notes>
+QA release:
+* Fixed Bug #3746 DB::assertExtension() not available anymore [dufuz]
+ </notes>
+ <contents>
+  <dir name="/">
+   <dir name="docs">
+    <file baseinstalldir="DB" name="ldap2-connect.php" role="doc" />
+    <file baseinstalldir="DB" name="ldap3-connect.php" role="doc" />
+    <file baseinstalldir="DB" name="search-assoc.php" role="doc" />
+    <file baseinstalldir="DB" name="search-ordered.php" role="doc" />
+   </dir> <!-- /docs -->
+   <dir name="tests">
+    <dir name="ldap2">
+     <file baseinstalldir="DB" name="01connect.phpt" role="test" />
+     <file baseinstalldir="DB" name="02fetch.phpt" role="test" />
+     <file baseinstalldir="DB" name="03simplequery.phpt" role="test" />
+     <file baseinstalldir="DB" name="05sequences.phpt" role="test" />
+     <file baseinstalldir="DB" name="06prepexec.phpt" role="test" />
+     <file baseinstalldir="DB" name="08affectedrows.phpt" role="test" />
+     <file baseinstalldir="DB" name="09numrows.phpt" role="test" />
+     <file baseinstalldir="DB" name="13limit.phpt" role="test" />
+     <file baseinstalldir="DB" name="14fetchmode_object.phpt" role="test" />
+     <file baseinstalldir="DB" name="15quote.phpt" role="test" />
+     <file baseinstalldir="DB" name="20ldapsetparam.phpt" role="test" />
+     <file baseinstalldir="DB" name="21ldapgetoption.phpt" role="test" />
+     <file baseinstalldir="DB" name="101errormap_old.phpt" role="test" />
+     <file baseinstalldir="DB" name="102errormap.phpt" role="test" />
+     <file baseinstalldir="DB" name="connect.inc" role="test" />
+     <file baseinstalldir="DB" name="mktable.inc" role="test" />
+     <file baseinstalldir="DB" name="setup.inc" role="test" />
+     <file baseinstalldir="DB" name="skipif.inc" role="test" />
+     <file baseinstalldir="DB" name="slapd-2.0.conf" role="test" />
+     <file baseinstalldir="DB" name="slapd-2.1.conf" role="test" />
+    </dir> <!-- /tests/ldap2 -->
+    <dir name="ldap3">
+     <file baseinstalldir="DB" name="01connect.phpt" role="test" />
+     <file baseinstalldir="DB" name="21ldapgetoption.phpt" role="test" />
+     <file baseinstalldir="DB" name="connect.inc" role="test" />
+     <file baseinstalldir="DB" name="setup.inc" role="test" />
+     <file baseinstalldir="DB" name="skipif.inc" role="test" />
+     <file baseinstalldir="DB" name="slapd-2.0.conf" role="test" />
+     <file baseinstalldir="DB" name="slapd-2.1.conf" role="test" />
+    </dir> <!-- /tests/ldap3 -->
+    <file baseinstalldir="DB" name="errors.inc" role="test" />
+    <file baseinstalldir="DB" name="fetchmodes.inc" role="test" />
+    <file baseinstalldir="DB" name="fetchmode_object.inc" role="test" />
+    <file baseinstalldir="DB" name="fetchrow.inc" role="test" />
+    <file baseinstalldir="DB" name="limit.inc" role="test" />
+    <file baseinstalldir="DB" name="numrows.inc" role="test" />
+    <file baseinstalldir="DB" name="prepexe.inc" role="test" />
+    <file baseinstalldir="DB" name="sequences.inc" role="test" />
+    <file baseinstalldir="DB" name="simplequery.inc" role="test" />
+   </dir> <!-- /tests -->
+   <file baseinstalldir="DB" name="ldap2.php" role="php" />
+   <file baseinstalldir="DB" name="ldap3.php" role="php" />
+  </dir> <!-- / -->
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>4.0.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0b1</min>
+   </pearinstaller>
+   <package>
+    <name>DB</name>
+    <min>1.7.0</min>
+    <channel>pear.php.net</channel>
+   </package>
+   <extension>
+    <name>ldap</name>
+   </extension>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
   <release>
-    <version>0.4</version>
-    <date>2003-09-30</date>
-    <state>beta</state>
-    <notes>
-* allow connect to other port than 389
-</notes>
-    <filelist>
-      <dir name="/" role="php" baseinstalldir="DB">
-        <file name="ldap2.php" />
-        <file name="ldap3.php" />
-      </dir>
-      <dir name="docs" role="doc">
-        <file name="ldap2-connect.php" />
-        <file name="ldap3-connect.php" />
-        <file name="search-assoc.php" />
-        <file name="search-ordered.php" />
-      </dir>
-      <dir name="tests" role="test">
-        <file name="errors.inc" />
-        <file name="fetchmode_object.inc" />
-        <file name="fetchmodes.inc" />
-        <file name="fetchrow.inc" />
-        <file name="limit.inc" />
-        <file name="numrows.inc" />
-        <file name="prepexe.inc" />
-        <file name="sequences.inc" />
-        <file name="simplequery.inc" />
-        <dir name="ldap2" role="test">
-          <file name="01connect.phpt" />
-          <file name="02fetch.phpt" />
-          <file name="03simplequery.phpt" />
-          <file name="05sequences.phpt" />
-          <file name="06prepexec.phpt" />
-          <file name="08affectedrows.phpt" />
-          <file name="09numrows.phpt" />
-          <file name="13limit.phpt" />
-          <file name="14fetchmode_object.phpt" />
-          <file name="15quote.phpt" />
-          <file name="connect.inc" />
-          <file name="mktable.inc" />
-          <file name="setup.inc" />
-          <file name="skipif.inc" />
-          <file name="101errormap_old.phpt" />
-          <file name="102errormap.phpt" />
-          <file name="20ldapsetparam.phpt" />
-          <file name="slapd-2.0.conf" />
-          <file name="slapd-2.1.conf" />
-          <file name="21ldapgetoption.phpt" />
-        </dir>
-        <dir name="ldap3" role="test">
-          <file name="01connect.phpt" />
-          <file name="21ldapgetoption.phpt" />
-          <file name="connect.inc" />
-          <file name="setup.inc" />
-          <file name="skipif.inc" />
-          <file name="slapd-2.0.conf" />
-          <file name="slapd-2.1.conf" />
-        </dir>
-      </dir>
-    </filelist>
-    <deps>
-      <dep type="ext" rel="has">ldap</dep>
-      <dep type="pkg" rel="has">DB</dep>
-    </deps>
+   <date>2003-09-30</date>
+   <time>20:20:00</time>
+   <version>
+    <release>0.4</release>
+    <api>0.4</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <license uri="http://www.gnu.org/copyleft/lesser.html">LGPL</license>
+   <notes>
+    * allow connect to other port than 389
+   </notes>
   </release>
-  <changelog>
   <release>
-    <version>0.3</version>
-    <date>2003-09-22</date>
-    <state>beta</state>
-    <notes>
-* mainly resolved CS issues
+   <version>
+    <release>0.3</release>
+    <api>0.3</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2003-09-22</date>
+   <license uri="http://www.gnu.org/copyleft/lesser.html">LGPL</license>
+   <notes>* mainly resolved CS issues
 * added sort parameter to simpleQuery()
-</notes>
+
+   </notes>
   </release>
   <release>
-  
-    <version>0.2</version>
-    <date>2003-03-24</date>
-    <state>devel</state>
-    <notes>
-Bugs fixed:
+   <version>
+    <release>0.2</release>
+    <api>0.2</api>
+   </version>
+   <stability>
+    <release>devel</release>
+    <api>devel</api>
+   </stability>
+   <date>2003-03-24</date>
+   <license uri="http://www.gnu.org/copyleft/lesser.html">LGPL</license>
+   <notes>Bugs fixed:
 
 - Remapping error codes from native to PEAR DB.
 
 Also:
 
 - Tests and examples added to the package.
-    </notes>
-  
+
+   </notes>
   </release>
   <release>
-  
-    <version>0.1</version>
-    <date>2003-03-06</date>
-    <state>devel</state>
-    <notes>Initial public release.</notes>
+   <version>
+    <release>0.1</release>
+    <api>0.1</api>
+   </version>
+   <stability>
+    <release>devel</release>
+    <api>devel</api>
+   </stability>
+   <date>2003-03-06</date>
+   <license uri="http://www.gnu.org/copyleft/lesser.html">LGPL</license>
+   <notes>Initial public release.
+   </notes>
   </release>
-  </changelog>
+ </changelog>
 </package>

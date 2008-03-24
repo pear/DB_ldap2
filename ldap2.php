@@ -149,7 +149,7 @@ class DB_ldap2 extends DB_common
             0x57 => DB_ERROR_SYNTAX                     // LDAP_FILTER_ERROR
         );
     }
-    
+
     // }}}
     // {{{ connect()
 
@@ -172,7 +172,7 @@ class DB_ldap2 extends DB_common
      */
     function connect($dsninfo, $persistent = false)
     {
-        if (!DB::assertExtension('ldap')) {
+        if (!PEAR::loadExtension('ldap')) {
             return $this->raiseError(DB_ERROR_EXTENSION_NOT_FOUND);
         }
 
@@ -249,20 +249,20 @@ class DB_ldap2 extends DB_common
      * (for reading operations) or data array (for writing operations).
      * Another elements of $query array are query parameters which overrides
      * the default parameters.
-     * 
+     *
      * The following parameters can be passed for search queries:<br />
      * <li />base_dn
      * <li />attributes - array, the attributes that shall be returned
      * <li />attrsonly
      * <li />sizelimit - integer, the max number of results to be returned
      * <li />timelimit - integer, the timelimit after which to stop searching
-     * <li />deref - 
+     * <li />deref -
      * <li/>sort - string, which tells the attribute name by which to sort
-     *  
+     *
      *
      * I.e.:
      * <code>
-     * // search queries 
+     * // search queries
      * // 'base_dn' is not given, so the one passed to connect() will be used
      * $db->simpleQuery("uid=dexter");
      *
@@ -871,8 +871,8 @@ class DB_ldap2 extends DB_common
         if ($this->last_param['action'] !== null) {
             return $this->raiseError($errno, null, null,
                         sprintf('%s base="%s" filter="%s"',
-                            $this->last_param['action'] ? $this->last_param['action'] : $this->param['action'], 
-                            $this->last_param['base_dn'] ? $this->last_param['base_dn'] : $this->param['base_dn'], 
+                            $this->last_param['action'] ? $this->last_param['action'] : $this->param['action'],
+                            $this->last_param['base_dn'] ? $this->last_param['base_dn'] : $this->param['base_dn'],
                             is_array($this->last_query) ? "" : $this->last_query
                         ),
                         $errno == @ldap_error($this->connection)
@@ -932,7 +932,7 @@ class DB_ldap2 extends DB_common
     {
 	if (!is_array($query)) {
 	    return parent::prepare($query);
-	} elseif (is_array($query) && isset($query[0]) && 
+	} elseif (is_array($query) && isset($query[0]) &&
 	    !$this->isManip(isset($query['action']) ? $query['action'] : $this->param['action'])
 	) {
 	    $filter = $query[0];
@@ -1017,7 +1017,7 @@ class DB_ldap2 extends DB_common
 
 	if (!is_array($query)) {
 	    return parent::executeEmulateQuery($stmt, $data);
-	} elseif (is_array($query) && isset($query[0]) && 
+	} elseif (is_array($query) && isset($query[0]) &&
 	    !$this->isManip(isset($query['action']) ? $query['action'] : $this->param['action'])
 	) {
 	    $p = &$this->prepare_tokens;
@@ -1089,7 +1089,7 @@ class DB_ldap2 extends DB_common
 	    $i = 0;
 	    foreach ($qq as $k=>$v) {
                 $type = $this->prepare_types[$stmt][$k];
-		    
+
                 if ($type !== null) {
 
         	    if (!isset($data) ||
@@ -1120,7 +1120,7 @@ class DB_ldap2 extends DB_common
                     	    $pdata = &$data;
                 	}
             	    }
-		
+
 		    $realquery[0][$k] = $pdata;
 		}
 	    }
