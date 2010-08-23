@@ -936,7 +936,7 @@ class DB_ldap2 extends DB_common
 	    !$this->isManip(isset($query['action']) ? $query['action'] : $this->param['action'])
 	) {
 	    $filter = $query[0];
-            $tokens = split("[\&\?\!]", $filter);
+            $tokens = preg_split("/[\&\?\!]/", $filter);
             $token = 0;
             $types = array();
 
