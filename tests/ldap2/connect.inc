@@ -1,6 +1,5 @@
 <?php
 require './setup.inc';
-//error_reporting(E_ALL);
 require_once "DB.php";
 $dbh = DB::connect(DRIVER_DSN, array('optimize' => 'portability'));
 

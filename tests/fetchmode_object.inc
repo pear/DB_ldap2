@@ -1,5 +1,4 @@
 <?php
-error_reporting(E_ALL);
 function pe($obj) {
     die($obj->getMessage() . "\n" . $obj->getDebugInfo());
 }
